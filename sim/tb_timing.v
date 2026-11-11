@@ -9,7 +9,6 @@ module tb_timing;
     vga_ctrl dut(pixel_clk, 16'hffff, x, y, hsync, vsync, frame_end, rgb);
     always #10 sys_clk = ~sys_clk;
 
-    // A white input exposes the active window. Record a line at pixel resolution.
     always @(negedge pixel_clk) begin
         if (frames == 0 && dut.cnt_v == 35)
             $fdisplay(fd, "%0t,%0d,%0d,%b,%b,%b,%b,%0d,%0d,%04h",
