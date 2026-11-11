@@ -34,9 +34,9 @@ module tb_top;
 
     task reset_held;
         rst_n = 0;
-        #1 note("reset_asserted"); // BARS and cleared pending.
+        #1 note("reset_asserted"); 
         #999999 rst_n = 1;
-        #45000000 note("held_after_reset"); // No new press until release.
+        #45000000 note("held_after_reset"); 
     endtask
 
     initial begin
@@ -45,26 +45,26 @@ module tb_top;
                   dut.u_button.armed, dut.u_fsm.pending, dut.frame_end, pulses, advances);
         #3 rst_n = 0;
         #200 rst_n = 1;
-        #25000000 note("startup"); // BARS
-        click(); release_key(); // MUST
-        click(); release_key(); // END
-        click();               // BARS
+        #25000000 note("startup"); 
+        click(); release_key();
+        click(); release_key(); 
+        click();              
         reset_held(); release_key();
 
         key_in = 0; #2000000;
         key_in = 1; #1000000;
         key_in = 0; #3000000;
         key_in = 1; #2000000;
-        note("after_bounce_before_stable_press"); // BARS, no new event.
-        click();                                // MUST once.
-        #60000000 note("long_hold");            // Same counts as after acceptance.
-        reset_held(); release_key();            // Reset from MUST.
-        click(); release_key(); click();        // END.
-        reset_held(); release_key();            // Reset from END.
-        click(); release_key();                 // MUST.
+        note("after_bounce_before_stable_press");
+        click();                            
+        #60000000 note("long_hold");          
+        reset_held(); release_key();           
+        click(); release_key(); click();       
+        reset_held(); release_key();           
+        click(); release_key();              
         key_in = 0;
-        #5000000 reset_held();                   // Reset mid-qualification.
-        release_key(); click();                  // A new press may advance again.
+        #5000000 reset_held();                 
+        release_key(); click();                 
         note("after_rearm");
         $finish;
     end
