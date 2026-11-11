@@ -6,13 +6,11 @@ module vga_ctrl(
     output wire hsync, vsync, frame_end,
     output wire [15:0] rgb
 );
-    // Lecture timing: sync, back porch, border, active, border, front porch.
     localparam [9:0] H_SYNC=10'd96, H_START=10'd144, H_END=10'd784;
     localparam [9:0] V_SYNC=10'd2, V_START=10'd35, V_END=10'd515;
     reg [9:0] cnt_h = 10'd0;
     reg [9:0] cnt_v = 10'd0;
     wire rgb_valid, pix_data_req;
-    // Scanning continues during reset so reset can show the bars.
     always @(posedge vga_clk) begin
         if (cnt_h == 10'd799) begin
             cnt_h <= 10'd0;
@@ -20,7 +18,6 @@ module vga_ctrl(
             else cnt_v <= cnt_v + 10'd1;
         end else cnt_h <= cnt_h + 10'd1;
     end
-    // The course board window expects positive sync pulses.
     assign frame_end = cnt_h == 10'd799 && cnt_v == 10'd524;
     assign hsync = cnt_h < H_SYNC;
     assign vsync = cnt_v < V_SYNC;
