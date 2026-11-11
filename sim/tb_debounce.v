@@ -27,10 +27,8 @@ module tb_debounce;
         .press_pulse(press_pulse)
     );
 
-    // 25 MHz clock
     always #20 clk = ~clk;
 
-    // Record accepted button events
     always @(posedge press_pulse) begin
         pulse_count = pulse_count + 1;
         $display("[%0t] Accepted press #%0d",
@@ -47,26 +45,23 @@ module tb_debounce;
     initial begin
 
         $dumpfile("tb_debounce.vcd");
-        // Dump the control signals throughout the run and sample the busy counter.
         $dumpvars(0, rst_n, key_n, clean_n, press_pulse, pulse_count, dut.armed);
         counter_file = $fopen("debounce_counter.csv", "w");
         $fdisplay(counter_file, "time_ns,count");
         $timeformat(-9, 0, "", 0);
 
-        // Reset
         rst_n = 0;
         #100;
         rst_n = 1;
 
         $display("\n===== DEBOUNCE TEST START =====");
 
-        // Initial stable release
+
         wait_ms(25);
 
         $display("[%0t] Initial release: clean_n=%b armed=%b",
                  $time, clean_n, dut.armed);
 
-        // Short glitch
         key_n = 0;
         wait_ms(2);
         key_n = 1;
@@ -75,7 +70,6 @@ module tb_debounce;
         $display("[%0t] Short glitch: clean_n=%b pulses=%0d",
                  $time, clean_n, pulse_count);
 
-        // Press bounce
         key_n = 0;
         wait_ms(2);
         key_n = 1;
@@ -88,7 +82,6 @@ module tb_debounce;
         $display("[%0t] Press bounce finished: pulses=%0d",
                  $time, pulse_count);
 
-        // Stable press: observe debounce counter
         key_n = 0;
         wait_ms(19);
 
@@ -100,13 +93,12 @@ module tb_debounce;
         $display("[%0t] Stable press accepted: clean_n=%b pulses=%0d",
                  $time, clean_n, pulse_count);
 
-        // Extend the stable press well beyond the qualification time.
         wait_ms(80);
 
         $display("[%0t] Long hold finished: pulses=%0d armed=%b",
                  $time, pulse_count, dut.armed);
 
-        // Release bounce
+       
         key_n = 1;
         wait_ms(2);
         key_n = 0;
@@ -121,14 +113,12 @@ module tb_debounce;
         $display("[%0t] Stable release: clean_n=%b armed=%b",
                  $time, clean_n, dut.armed);
 
-        // Second press
         key_n = 0;
         wait_ms(25);
 
         $display("[%0t] Second press: pulses=%0d",
                  $time, pulse_count);
 
-        // Reset while button is held
         rst_n = 0;
         #100;
         rst_n = 1;
@@ -138,11 +128,11 @@ module tb_debounce;
         $display("[%0t] Reset while held: clean_n=%b armed=%b pulses=%0d",
                  $time, clean_n, dut.armed, pulse_count);
 
-        // Release and re-arm
+      
         key_n = 1;
         wait_ms(25);
 
-        // Third press
+       
         key_n = 0;
         wait_ms(25);
 
@@ -152,7 +142,7 @@ module tb_debounce;
         key_n = 1;
         wait_ms(25);
 
-        $display("\n===== DEBOUNCE TEST FINISHED =====");
+        $display("DEBOUNCE TEST FINISHED");
         $display("Total accepted pulses: %0d", pulse_count);
 
         $fclose(counter_file);
