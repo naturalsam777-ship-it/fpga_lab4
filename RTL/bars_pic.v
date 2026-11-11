@@ -1,8 +1,7 @@
 `timescale 1ns/1ns
 module bars_pic(input wire clk, input wire [9:0] x,y,
                 output reg [15:0] data);
-    // Same ten 64-pixel bars as the course/Lab 3 example.
-    // Keep this path running during reset: reset must display bars.
+
     always @(posedge clk) begin
         if (x >= 640 || y >= 480) data <= 16'h0000;
         else case (x[9:6])
