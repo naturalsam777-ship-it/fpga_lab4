@@ -43,7 +43,6 @@ module vga_pic(
     wire [9:0] x_u = pix_x - 10'd240;
     wire [9:0] x_s = pix_x - 10'd336;
     wire [9:0] x_t = pix_x - 10'd432;
-    // Each stored bit occupies an 8x8 block. Bit 7 is the leftmost column.
     always @(posedge vga_clk or negedge sys_rst_n) begin
         if (!sys_rst_n) pix_data <= BLACK;
         else if (pix_y >= 10'd208 && pix_y < 10'd272) begin
