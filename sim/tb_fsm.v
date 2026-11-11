@@ -26,23 +26,23 @@ module tb_fsm;
     initial begin
         $dumpfile("tb_fsm.vcd");
         $dumpvars(0, tb_fsm);
-        reset(); // BARS, pending cleared.
+        reset(); 
         for (round = 0; round < 3; round = round + 1) begin
-            step(0, 1); // Latch the request and hold the current state.
+            step(0, 1); 
             step(0, 0);
-            step(1, 0); // Advance one state.
+            step(1, 0); 
             step(0, 0);
-            step(1, 0); // An empty boundary holds the new state.
+            step(1, 0); 
             step(0, 0);
         end
-        step(1, 1); // Same-cycle request and boundary advance to MUST.
-        step(0, 1); // Queue a request, then clear it with RESET.
+        step(1, 1); 
+        step(0, 1); 
         reset();
         step(0, 0);
-        step(1, 0); // BARS with no queued request.
+        step(1, 0); 
         force dut.state = 2'b11;
         #5 release dut.state;
-        step(0, 0); // Recover to BARS.
+        step(0, 0);
         $finish;
     end
 endmodule
