@@ -24,7 +24,7 @@ module tb_pixels;
         $dumpvars(0, clk, rst_n, x, y, bars, must_text, end_text, sample_id);
         #1 rst_n = 0;
         #60 rst_n = 1;
-        // Ten bar interiors, a bar boundary, glyph strokes, gaps and blanking.
+      
         for (col = 0; col < 10; col = col + 1)
             probe(32 + 64*col, 120);
         probe(63, 120); probe(64, 120);
